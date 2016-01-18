@@ -27,7 +27,7 @@
         _this.init = function() {
             var tick = $interval(updateTime, 1000);
             updateTime();
-            $scope.map = MapService.generateMap("Seattle,WA");
+            $scope.map = MapService.generateMap("Chicago,IL");
             _this.clearResults();
             restCommand();
 

@@ -26,7 +26,7 @@
   <body ng-controller="MirrorCtrl as commands">
     <div class="top">
       <div class="top-left">
-        <div class="date grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
+        <div class="date">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
         <div class="time">{{date | date : 'hh:mm a'}}</div>
       </div>
       <div class="top-right">
@@ -47,41 +47,8 @@
     </div>
     <div class="container">
       <div class="middle-center">
-        <h1>{{complement}}</h1>
-        <h3 ng-show="!(user.name === undefined)">{{user.name}}</h3>
-        <!-- <div class="listening" ng-show="listening">Ready: {{focus}}</div> -->
-        <div class="map-container animate-grow" ng-show="focus == 'map'">
-          <img class="map animate-grow" ng-src="{{map}}"/>
-        </div>
-      </div>
-      <div class="bottom-center">
-        <!-- Command list -->
-        <div class="commands animate-grow" ng-show="focus == 'commands'">
-          <h2>Availalble Commands</h2>
-          <dl>
-            <dt>What can I say?</dt>
-            <dd>Shows a list of voice commands available to you.</dd>
-            <dt>Go home</dt>
-            <dd>Takes you back to the home screen</dd>
-            <dt>Show me ________</dt>
-            <dd>Will show you pictures of the requested item.</dd>
-            <dt>Remind me to ________</dt>
-            <dd>Add something to the reminders list.</dd>
-            <dt>Clear reminders</dt>
-            <dd>Clears out your reminders list.</dd>
-            <dt>Show map</dt>
-            <dd>Shows a map of your current city.</dd>
-            <dt>Show map of ________</dt>
-            <dd>Shows a map of the given location.</dd>
-          </dl>
-          <small>
-            We are using node <script>document.write(process.versions.node)</script>,
-            Chrome <script>document.write(process.versions.chrome)</script>,
-            and Electron <script>document.write(process.versions.electron)</script>.
-          </small>
-        </div>
-
-        <div class="interim-result" ng-bind="interimResult"></div>
+        <!-- <h1>{{complement}}</h1> -->
+        <!-- <h3 ng-show="!(user.name === undefined)">{{user.name}}</h3> -->
       </div>
       <div class="colors animate-grow" ng-show="focus == 'colors'">
         <div class="color-block" ng-repeat="color in colors" style="background-color:{{color}}"></div>
