@@ -36,6 +36,20 @@ dt {
     color: #999;
 }
 
+.white {
+    color: #FFF;
+}
+
+figure {
+    margin: 3em auto;
+    width: 368px;
+    height: 152px;
+}
+
+canvas {
+    display: inline-block;
+}
+
 /* Displays */
 .sleep-cover {
     background-color: black;
@@ -67,10 +81,12 @@ dt {
 
 .top-left {
     float: left;
+    width: 500px;
 }
 
 .date {
     font-size: 42px;
+    style: bold;
 }
 
 .time {
@@ -79,6 +95,7 @@ dt {
 
 .top-right {
     float: right;
+    width: 500px;
 }
 
 .middle-center {
@@ -106,6 +123,20 @@ dt {
     margin-right: auto;
 }
 
+.calendar {
+    margin-right: auto;
+    display: inline-block;
+    text-align: left;
+}
+
+.calendar-item {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-right: auto;
+}
+
 .weather {
     margin-left: auto;
     display: inline-block;
@@ -113,16 +144,30 @@ dt {
 }
 
 .weather-today .tempreture {
-    font-size: 80px;
+    font-size: 110px;
+    font-weight: bold;
+}
+
+.weather-today .icon {
+    padding-top: 40px;
 }
 
 .weather-week-descriptor {
     font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    max-width: 55%;
+    font-size: 20px;
     margin-left: auto;
     margin-bottom: 10px;
-    text-align: justify;
+    text-align: right;
+}
+
+.weather-hour {
+    margin-right: 10px;
+    font-size: 22px;
+}
+
+.weather-hour .tempreture {
+    display: inline-block;
+    width: 60px;
 }
 
 .weather-week {
@@ -132,13 +177,13 @@ dt {
 
 .weather-week .day {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 5px;
     width: 50px;
 }
 
 .weather-week .tempreture {
     display: inline-block;
-    width: 60px;
+    width: 50px;
 }
 
 .map {

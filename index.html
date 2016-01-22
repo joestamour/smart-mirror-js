@@ -2,22 +2,146 @@
 <html ng-app="SmartMirror">
   <head>
     <title>Smart Mirror</title>
+
     <!-- Libraries -->
-    <script src="js/annyang.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.min.js"></script>
+    
     <!-- App -->
+
     <!--<script src="/js/init.js"></script>-->
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/annyang-service.js"></script>
     <script src="js/weather-service.js"></script>
-    <script src="js/map-service.js"></script>
-    <script src="js/hue-service.js"></script>
-    <script src="js/geolocation-service.js"></script>
     <script src="js/controller.js"></script>
+    <script type="text/javascript">
+      // Your Client ID can be retrieved from your project in the Google
+      // Developer Console, https://console.developers.google.com
+      var CLIENT_ID = '399836225200-n6mn1qg3ruoj2g4rth2mtva2asli84bt.apps.googleusercontent.com';
+      var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+
+      /**
+       * Check if current user has authorized this application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+          {
+            'client_id': CLIENT_ID,
+            'scope': SCOPES.join(' '),
+            'immediate': true
+          }, handleAuthResult);
+      }
+
+      /**
+       * Handle response from authorization server.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        var authorizeDiv = document.getElementById('authorize-div');
+        if (authResult && !authResult.error) {
+          // Hide auth UI, then load client library.
+          authorizeDiv.style.display = 'none';
+          loadCalendarApi();
+        } else {
+          // Show auth UI, allowing the user to initiate authorization by
+          // clicking authorize button.
+          authorizeDiv.style.display = 'inline';
+        }
+      }
+
+      /**
+       * Initiate auth flow in response to user clicking authorize button.
+       *
+       * @param {Event} event Button click event.
+       */
+      function handleAuthClick(event) {
+        gapi.auth.authorize(
+          {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
+          handleAuthResult);
+        return false;
+      }
+
+      /**
+       * Load Google Calendar client library. List upcoming events
+       * once client library is loaded.
+       */
+      function loadCalendarApi() {
+        var tickTest = setInterval(listUpcomingEvents, 60 * 1000);
+        gapi.client.load('calendar', 'v3', listUpcomingEvents);
+      }
+
+      /**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+      function listUpcomingEvents() {
+
+        var request = gapi.client.calendar.events.list({
+          'calendarId': 'taylor-sutcliffe@fsm.northwestern.edu',
+          'timeMin': (new Date()).toISOString(),
+          'timeMax': (new Date(new Date().getTime() + 48 * 60 * 60 * 1000)).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 100,
+          'orderBy': 'startTime'
+        });
+
+        request.execute(function(resp) {
+          var events = resp.items;
+          clearPre();
+          appendPre('Upcoming events:');
+
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+
+              if (event.summary.length > 40) {
+                event.summary = event.summary.substring(0, 40) + "...";
+              }
+
+              var whenDay = moment(event.start.dateTime).format('ddd');
+
+              var whenStart = moment(event.start.dateTime).format('hh:mma');
+              if (!whenStart) {
+                appendPre(whenDay + ' ' + event.summary)
+              } else {
+                var whenEnd = moment(event.end.dateTime).format('hh:mma');
+                if (!whenEnd) {
+                  whenEnd = event.end.date;
+                }
+                appendPre(whenDay + '\t  ' + whenStart + ' - ' + whenEnd + '\t' + event.summary)
+              }
+            }
+
+          } else {
+            appendPre('No upcoming events found.');
+          }
+
+        });
+      }
+
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById('output');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+      function clearPre() {
+        document.getElementById('output').innerHTML = "";
+      }
+
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
     <!-- Styles and Resources -->
     <link rel="shortcut icon" href="favicon.ico" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800,700' rel='stylesheet' type='text/css'>
@@ -26,20 +150,59 @@
   <body ng-controller="MirrorCtrl as commands">
     <div class="top">
       <div class="top-left">
-        <div class="date">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
+        <div class="date light-grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
         <div class="time">{{date | date : 'hh:mm a'}}</div>
+        <div class="calendar">
+          <div id="authorize-div" style="display: none">
+            <span>Authorize access to Google Calendar</span>
+            <button id="authorize-button" onclick="handleAuthClick(event)">
+              Authorize
+            </button>
+          </div>
+          <div class="calendar-item">
+            <pre class="calendar-item light-grey" id="output"></pre>
+          </div>
+        </div>
       </div>
       <div class="top-right">
         <div class="weather">
           <div class="weather-today">
-            <span class="tempreture">{{currentForcast.temperature}}&deg;</span>
+            <span class="icon">
+              <canvas ng-show="currentForcast.icon == 'clear-day'" id="clear-day" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'clear-night'" id="clear-night" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'partly-cloudy-day'" id="partly-cloudy-day" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'partly-cloudy-night'" id="partly-cloudy-night" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'cloudy'" id="cloudy" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'rain'" id="rain" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'snow'" id="snow" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'fog'" id="fog" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'sleet'" id="sleet" width="80" height="80"></canvas>
+              <canvas ng-show="currentForcast.icon == 'wind'" id="wind" width="80" height="80"></canvas>
+            </span>
+            <span class="tempreture">
+              {{currentForcast.temperature}}&deg;
+            </span>
           </div>
           <div class="weather-week-descriptor">{{weeklyForcast.summary}}</div>
-          <div class="weather-week" ng-repeat="forcast in weeklyForcast.data" ng-if="$index > 0">
+            <div class="weather-hour">
+              <span class="tempreture light-grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                {{forcast.hour}}
+              </span>
+            </div>
+            <div class="weather-hour">
+              <span class="tempreture" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                {{forcast.temperature}}&deg;
+              </span>
+            </div>
+          <div class="weather-week light-grey"
+              <span class="tempreture tempreture-min">Low</span>
+              <span class="tempreture tempreture-max">High</span>
+          </div>
+          <div class="weather-week" ng-repeat="forcast in weeklyForcast.data" ng-if="$index < 7">
             <div class="weather-week-day">
               <span class="day light-grey">{{forcast.day}}</span>
-              <span class="tempreture tempreture-min">{{forcast.temperatureMin}}</span>
-              <span class="tempreture tempreture-max">{{forcast.temperatureMax}}</span>
+              <span class="tempreture tempreture-min">{{forcast.temperatureMin}}&deg;</span>
+              <span class="tempreture tempreture-max">{{forcast.temperatureMax}}&deg;</span>
             </div>
           </div>
         </div>
@@ -48,7 +211,6 @@
     <div class="container">
       <div class="middle-center">
         <!-- <h1>{{complement}}</h1> -->
-        <!-- <h3 ng-show="!(user.name === undefined)">{{user.name}}</h3> -->
       </div>
       <div class="colors animate-grow" ng-show="focus == 'colors'">
         <div class="color-block" ng-repeat="color in colors" style="background-color:{{color}}"></div>
@@ -77,5 +239,20 @@
     </div>
     <!-- Sleep cover -->
     <div ng-show="focus == 'sleep'" class="sleep-cover fade"></div>
+
+    <script src="js/skycons.js"></script>
+    <script>
+      var icons = new Skycons({"color": "white"}),
+          list  = [
+            "clear-day", "clear-night", "partly-cloudy-day",
+            "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
+            "fog"
+          ],
+          i;
+      for(i = list.length; i--; )
+        icons.set(list[i], list[i]);
+      icons.play();
+    </script>
+
   </body>
 </html>
