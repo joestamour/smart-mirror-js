@@ -1,15 +1,10 @@
 (function(angular) {
     'use strict';
 
-    function MirrorCtrl(WeatherService, $scope, $timeout, $interval) {
+    function MirrorCtrl(WeatherService, ComplementService, $scope, $timeout, $interval) {
         var _this = this;
         $scope.listening = false;
         $scope.debug = false;
-        $scope.complement = "Hi, sexy!"
-        $scope.focus = "default";
-        $scope.user = {};
-
-        $scope.colors=["#6ed3cf", "#9068be", "#e1e8f0", "#e62739"];
 
         //Update the time
         function updateTime(){
@@ -28,36 +23,43 @@
         //Update the calendar
         function updateCalendar(){
 
+        }
 
-
+        //Update the calendar
+        function updateComplement(){
+            $scope.complement = ComplementService.getComplement();
         }
 
         _this.init = function() {
-            var tick = $interval(updateTime, 1000);
-            var tickMinutes = $interval(updateCalendar, 1 * 60 * 1000);
-            var tickFiveMinutes = $interval(updateWeather, 5 * 60 * 1000);
+            // update time every second
+            $interval(updateTime, 1000);
+
+            // update calendar every one minute
+            $interval(updateCalendar, 1 * 60 * 1000);
+
+            // update weather every five minutes
+            $interval(updateWeather, 5 * 60 * 1000);
+
+            // update complement every 30 minutes
+            $interval(updateComplement, 30 * 60 * 1000);
 
             updateTime();
-            updateWeather();
+            updateComplement();
 
-            _this.clearResults();
+            WeatherService.init().then(function(){
+                $scope.currentForcast = WeatherService.currentForcast();
+                $scope.hourlyForcast = WeatherService.hourlyForcast();
+                $scope.weeklyForcast = WeatherService.weeklyForcast();
+                console.log($scope.currentForcast);
+                console.log($scope.hourlyForcast);
+                console.log($scope.weeklyForcast);
+            });
 
             var defaultView = function() {
                 console.debug("Ok, going to default view...");
                 $scope.focus = "default";
             }
 
-        };
-
-        _this.addResult = function(result) {
-            _this.results.push({
-                content: result,
-                date: new Date()
-            });
-        };
-
-        _this.clearResults = function() {
-            _this.results = [];
         };
 
         _this.init();

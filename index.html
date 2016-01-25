@@ -10,15 +10,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.min.js"></script>
     
     <!-- App -->
-
-    <!--<script src="/js/init.js"></script>-->
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/weather-service.js"></script>
+    <script src="js/complement-service.js"></script>
     <script src="js/controller.js"></script>
     <script type="text/javascript">
-      // Your Client ID can be retrieved from your project in the Google
-      // Developer Console, https://console.developers.google.com
+
       var CLIENT_ID = '399836225200-n6mn1qg3ruoj2g4rth2mtva2asli84bt.apps.googleusercontent.com';
       var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
@@ -36,8 +34,6 @@
 
       /**
        * Handle response from authorization server.
-       *
-       * @param {Object} authResult Authorization result.
        */
       function handleAuthResult(authResult) {
         var authorizeDiv = document.getElementById('authorize-div');
@@ -54,8 +50,6 @@
 
       /**
        * Initiate auth flow in response to user clicking authorize button.
-       *
-       * @param {Event} event Button click event.
        */
       function handleAuthClick(event) {
         gapi.auth.authorize(
@@ -74,9 +68,7 @@
       }
 
       /**
-       * Print the summary and start datetime/date of the next ten events in
-       * the authorized user's calendar. If no events are found an
-       * appropriate message is printed.
+       * Print the summary and start datetime/date of the next 48h events
        */
       function listUpcomingEvents() {
 
@@ -125,10 +117,7 @@
       }
 
       /**
-       * Append a pre element to the body containing the given message
-       * as its text node.
-       *
-       * @param {string} message Text to be placed in pre element.
+       * Append a pre element to the body containing the given message as its text node.
        */
       function appendPre(message) {
         var pre = document.getElementById('output');
@@ -148,98 +137,88 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
   <body ng-controller="MirrorCtrl as commands">
-    <div class="top">
-      <div class="top-left">
-        <div class="date light-grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
-        <div class="time">{{date | date : 'hh:mm a'}}</div>
-        <div class="calendar">
-          <div id="authorize-div" style="display: none">
-            <span>Authorize access to Google Calendar</span>
-            <button id="authorize-button" onclick="handleAuthClick(event)">
-              Authorize
-            </button>
-          </div>
-          <div class="calendar-item">
-            <pre class="calendar-item light-grey" id="output"></pre>
-          </div>
-        </div>
-      </div>
-      <div class="top-right">
-        <div class="weather">
-          <div class="weather-today">
-            <span class="icon">
-              <canvas ng-show="currentForcast.icon == 'clear-day'" id="clear-day" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'clear-night'" id="clear-night" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'partly-cloudy-day'" id="partly-cloudy-day" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'partly-cloudy-night'" id="partly-cloudy-night" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'cloudy'" id="cloudy" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'rain'" id="rain" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'snow'" id="snow" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'fog'" id="fog" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'sleet'" id="sleet" width="80" height="80"></canvas>
-              <canvas ng-show="currentForcast.icon == 'wind'" id="wind" width="80" height="80"></canvas>
-            </span>
-            <span class="tempreture">
-              {{currentForcast.temperature}}&deg;
-            </span>
-          </div>
-          <div class="weather-week-descriptor">{{weeklyForcast.summary}}</div>
-            <div class="weather-hour">
-              <span class="tempreture light-grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
-                {{forcast.hour}}
-              </span>
+
+    <div class="wrapper">
+      <div class="top">
+        <div class="top-left">
+
+          <!-- Time -->
+          <div class="date light-grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
+          <div class="time">{{date | date : 'hh:mm a'}}</div>
+
+          <!-- Calendar -->
+          <div class="calendar">
+            <div id="authorize-div" style="display: none">
+              <span>Authorize access to Google Calendar</span>
+              <button id="authorize-button" onclick="handleAuthClick(event)">
+                Authorize
+              </button>
             </div>
-            <div class="weather-hour">
-              <span class="tempreture" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
-                {{forcast.temperature}}&deg;
-              </span>
-            </div>
-          <div class="weather-week light-grey"
-              <span class="tempreture tempreture-min">Low</span>
-              <span class="tempreture tempreture-max">High</span>
-          </div>
-          <div class="weather-week" ng-repeat="forcast in weeklyForcast.data" ng-if="$index < 7">
-            <div class="weather-week-day">
-              <span class="day light-grey">{{forcast.day}}</span>
-              <span class="tempreture tempreture-min">{{forcast.temperatureMin}}&deg;</span>
-              <span class="tempreture tempreture-max">{{forcast.temperatureMax}}&deg;</span>
+            <div class="calendar-item">
+              <pre class="calendar-item light-grey" id="output"></pre>
             </div>
           </div>
         </div>
+
+        <!-- Weather -->
+        <div class="top-right">
+          <div class="weather">
+            <div class="weather-today">
+              <span class="icon">
+                <canvas ng-show="currentForcast.icon == 'clear-day'" id="clear-day" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'clear-night'" id="clear-night" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'partly-cloudy-day'" id="partly-cloudy-day" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'partly-cloudy-night'" id="partly-cloudy-night" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'cloudy'" id="cloudy" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'rain'" id="rain" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'snow'" id="snow" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'fog'" id="fog" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'sleet'" id="sleet" width="80" height="80"></canvas>
+                <canvas ng-show="currentForcast.icon == 'wind'" id="wind" width="80" height="80"></canvas>
+              </span>
+              <span class="tempreture">
+                {{currentForcast.temperature}}&deg;
+              </span>
+            </div>
+            <div class="weather-week-descriptor light-grey">{{hourlyForcast.summary}}</div>
+              <div class="weather-hour">
+                <span class="tempreture light-grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                  {{forcast.hour}}
+                </span>
+              </div>
+              <div class="weather-hour">
+                <span class="tempreture" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                  {{forcast.temperature}}&deg;
+                </span>
+              </div>
+            <div class="weather-week light-grey"
+                <span class="tempreture tempreture-min">Low</span>
+                <span class="tempreture tempreture-max">High</span>
+            </div>
+            <div class="weather-week" ng-repeat="forcast in weeklyForcast.data" ng-if="$index < 7">
+              <div class="weather-week-day">
+                <span class="day light-grey">{{forcast.day}}</span>
+                <span class="tempreture tempreture-min">{{forcast.temperatureMin}}&deg;</span>
+                <span class="tempreture tempreture-max">{{forcast.temperatureMax}}&deg;</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div class="push"></div>
+
     </div>
-    <div class="container">
-      <div class="middle-center">
-        <!-- <h1>{{complement}}</h1> -->
-      </div>
-      <div class="colors animate-grow" ng-show="focus == 'colors'">
-        <div class="color-block" ng-repeat="color in colors" style="background-color:{{color}}"></div>
-      </div>
-    </div>
-    <!-- Debug Buttons -->
-    <div class="debug-info">
-      <!--<button ng-click="debug = true">Open Debug</button>-->
-    </div>
-    <div class="debug-info" ng-show="debug == true">
-      <button ng-click="focus = (focus == 'map')?'default':'map'">Map</button>
-      <button ng-click="focus = (focus == 'colors')?'default':'colors'">Colors</button>
-      <button ng-click="focus = (focus == 'commands')?'default':'commands'">Commands</button>
-      <button ng-click="debug = false">Close Debug</button>
-      <!-- Has results -->
-      <div ng-show="commands.results.length > 0">
-        <button class="btn btn-default" ng-click="commands.clearResults()">Clear</button>
-        <hr/>
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="result in commands.results">
-            <span class="badge">{{ result.date | date : 'EEE MMM, yyyy hh:mm:ss a' }}</span>
-            {{ result.content }}
-          </li>
-        </ul>
-      </div>
-    </div>
+
+    <!-- Compliment -->
+    <div class="footer">
+      <h1>{{complement}}</h1>
+    </div> 
+
     <!-- Sleep cover -->
     <div ng-show="focus == 'sleep'" class="sleep-cover fade"></div>
 
+    <!-- Skycons init -->
     <script src="js/skycons.js"></script>
     <script>
       var icons = new Skycons({"color": "white"}),

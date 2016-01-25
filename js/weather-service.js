@@ -19,6 +19,7 @@
             }
             service.forcast.data.currently.day = moment.unix(service.forcast.data.currently.time).format('ddd')
             service.forcast.data.currently.temperature = Math.round(service.forcast.data.currently.temperature);
+            service.forcast.data.currently.apparentTemperature = Math.round(service.forcast.data.currently.apparentTemperature);
             return service.forcast.data.currently;
         }
 
