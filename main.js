@@ -33,7 +33,7 @@ app.on('window-all-closed', function() {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
 
-  var browserWindowOptions = {width: 1080, height: 1920, icon: 'favicon.ico' , kiosk:false, autoHideMenuBar:true, darkTheme:true};
+  var browserWindowOptions = {width: 1080, height: 1920, icon: 'favicon.ico' , kiosk:false, fullscreen:false, autoHideMenuBar:true, darkTheme:true};
 
   // Create the browser window.
   mainWindow = new BrowserWindow(browserWindowOptions);
