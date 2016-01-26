@@ -129,10 +129,9 @@ canvas {
 }
 
 .calendar-item {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Lucida Console', sans-serif;
     font-weight: normal;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 12px;
     margin-right: auto;
 }
 

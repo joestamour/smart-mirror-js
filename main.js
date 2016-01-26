@@ -13,6 +13,13 @@ console.log(powerSaveBlocker.isStarted(id));
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
 
+var exec = require('child_process').exec;
+var cmd = 'python -m SimpleHTTPServer 8000';
+
+exec(cmd, function(error, stdout, stderr) {
+  // command output is in stdout
+});
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
@@ -26,7 +33,6 @@ app.on('window-all-closed', function() {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
 
-
   // Put the app on a secondary display if availalbe
   var atomScreen = require('screen');
   var displays = atomScreen.getAllDisplays();
@@ -38,7 +44,7 @@ app.on('ready', function() {
     }
   }
 
-  var browserWindowOptions = {width: 800, height: 600, icon: 'favicon.ico' , kiosk:true, autoHideMenuBar:true, darkTheme:true};
+  var browserWindowOptions = {width: 1080, height: 1920, icon: 'favicon.ico' , kiosk:false, autoHideMenuBar:true, darkTheme:true};
   if (externalDisplay) {
     browserWindowOptions.x = externalDisplay.bounds.x + 50;
     browserWindowOptions.y = externalDisplay.bounds.y + 50
@@ -48,7 +54,7 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow(browserWindowOptions);
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.loadUrl('http://localhost:8000/index.html');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
