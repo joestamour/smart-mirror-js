@@ -33,32 +33,13 @@ app.on('window-all-closed', function() {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
 
-  // Put the app on a secondary display if availalbe
-  var atomScreen = require('screen');
-  var displays = atomScreen.getAllDisplays();
-  var externalDisplay = null;
-  for (var i in displays) {
-    if (displays[i].bounds.x > 0 || displays[i].bounds.y > 0) {
-      externalDisplay = displays[i];
-      break;
-    }
-  }
-
   var browserWindowOptions = {width: 1080, height: 1920, icon: 'favicon.ico' , kiosk:false, autoHideMenuBar:true, darkTheme:true};
-  if (externalDisplay) {
-    browserWindowOptions.x = externalDisplay.bounds.x + 50;
-    browserWindowOptions.y = externalDisplay.bounds.y + 50
-  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow(browserWindowOptions);
 
   // and load the index.html of the app.
   mainWindow.loadUrl('http://localhost:8000/index.html');
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
-
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
