@@ -141,11 +141,18 @@ canvas {
 }
 
 .calendar-item {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Tahoma', sans-serif;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 15px;
     margin: 0;
-    letter-spacing: 1px;
+    margin-right: auto;
+}
+
+.calendar-item-tomorrow {
+    font-family: 'Tahoma', sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+    margin: 0;
     margin-right: auto;
 }
 
