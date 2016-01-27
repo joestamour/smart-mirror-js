@@ -101,7 +101,7 @@
             for (i = 0; i < events.length; i++) {
               var event = events[i];
 
-              if (event.summary.length > 40) {
+              if (event.summary.length > 30) {
                 event.summary = event.summary.substring(0, 40) + "...";
               }
 
@@ -194,7 +194,7 @@
         <div class="top-left">
 
           <!-- Time -->
-          <div class="date light-grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
+          <div class="date">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
           <div class="time">{{date | date : 'hh:mm a'}}</div>
 
           <!-- Calendar -->
@@ -206,9 +206,9 @@
               </button>
             </div>
             <div class="calendar-item">
-              Today's Events:
-              <pre class="calendar-item grey" id="output3" style="margin: 0;"></pre>
-              <pre class="calendar-item" id="output1"></pre>
+              <span class="pink" style="font-size: 120%;">Today's Events:
+              <pre class="calendar-item grey" id="output3" style="margin: 0; text-decoration: line-through;"></pre>
+              <pre class="calendar-item pink" id="output1"></pre>
               <br>
               <span class="light-grey">Tomorrow's Events:</span>
               <pre class="calendar-item light-grey" id="output2"></pre>

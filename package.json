@@ -1,6 +1,6 @@
 {
   "name": "smart-mirror-js",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Mirror, Mirror on the wall",
   "main": "main.js",
   "scripts": {

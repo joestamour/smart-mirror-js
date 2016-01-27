@@ -10,7 +10,7 @@
         ],
         'afternoon': [
             'Hello, beautiful!',
-            'You look sexy!',
+            'You are sexy!',
             'Looking good today!',
             'You look wonderful!'
         ],

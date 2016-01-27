@@ -28,11 +28,23 @@ dt {
 
 /* Colors */
 .light-grey {
-    color: #ccc;
+    color: #ddd;
 }
 
 .grey {
-    color: #999;
+    color: #AAA;
+}
+
+.blue {
+    color: #3399ff;
+}
+
+.green {
+    color: #66ff33;
+}
+
+.pink {
+    color: #ff66ff;
 }
 
 .white {
@@ -78,11 +90,12 @@ canvas {
 
 .date {
     font-size: 35px;
-    style: bold;
+    font-weight: bold;
 }
 
 .time {
     font-size: 100px;
+    font-weight: bold;
 }
 
 .top-right {
@@ -128,9 +141,9 @@ canvas {
 }
 
 .calendar-item {
-    font-family: 'Monaco', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-weight: normal;
-    font-size: 10px;
+    font-size: 14px;
     margin: 0;
     letter-spacing: 1px;
     margin-right: auto;
@@ -143,7 +156,7 @@ canvas {
 }
 
 .weather-today .tempreture {
-    font-size: 90px;
+    font-size: 100px;
     font-weight: bold;
 }
 
@@ -153,14 +166,16 @@ canvas {
 
 .weather-week-descriptor {
     font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
+    font-size: 18px;
+    font-weight: bold;
     margin-left: auto;
     margin-bottom: 10px;
     text-align: right;
 }
 
 .weather-hour {
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .weather-hour .tempreture {
@@ -169,7 +184,8 @@ canvas {
 }
 
 .weather-week {
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .weather-week .day {
