@@ -7,7 +7,6 @@ body {
     background-color: black;
     color: #fff;
     font-family: 'HelveticaNeue-UltraLight', 'Open Sans', sans-serif;
-    font-weight: 300;
     height: 100%;
 }
 
@@ -83,7 +82,7 @@ canvas {
 }
 
 .time {
-    font-size: 90px;
+    font-size: 100px;
 }
 
 .top-right {
@@ -132,6 +131,8 @@ canvas {
     font-family: 'Monaco', sans-serif;
     font-weight: normal;
     font-size: 10px;
+    margin: 0;
+    letter-spacing: 1px;
     margin-right: auto;
 }
 

@@ -72,10 +72,14 @@
        */
       function listUpcomingEvents() {
 
+        var date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+
         var request = gapi.client.calendar.events.list({
           'calendarId': 'taylor-sutcliffe@fsm.northwestern.edu',
-          'timeMin': (new Date()).toISOString(),
-          'timeMax': (new Date(new Date().getTime() + 48 * 60 * 60 * 1000)).toISOString(),
+          'timeMin': date.toISOString(),
+          'timeMax': (new Date(date.getTime() + 48 * 60 * 60 * 1000)).toISOString(),
           'showDeleted': false,
           'singleEvents': true,
           'maxResults': 100,
@@ -85,9 +89,15 @@
         request.execute(function(resp) {
           var events = resp.items;
           clearPre();
-          appendPre('Upcoming events:');
 
           if (events.length > 0) {
+
+            var todayEventFound = false;
+            var tomorrowEventFound = false;
+
+            // appendPre(1, "Today's events:");
+            // appendPre(2, "Tomorrow's events:");
+
             for (i = 0; i < events.length; i++) {
               var event = events[i];
 
@@ -96,21 +106,48 @@
               }
 
               var whenDay = moment(event.start.dateTime).format('ddd');
-
               var whenStart = moment(event.start.dateTime).format('hh:mma');
-              if (!whenStart) {
-                appendPre(whenDay + ' ' + event.summary)
-              } else {
-                var whenEnd = moment(event.end.dateTime).format('hh:mma');
-                if (!whenEnd) {
-                  whenEnd = event.end.date;
+
+              if (whenDay === moment(new Date()).format('ddd')) {
+                todayEventFound = true;
+
+                if (!whenStart) {
+                  appendPre(1, whenDay + ' ' + event.summary)
+                } else {
+                  var whenEnd = moment(event.end.dateTime).format('hh:mma');
+                  if (!whenEnd) {
+                    whenEnd = event.end.date;
+                  }
+
+                  if ( (new Date(event.end.dateTime)).getTime() > (new Date()).getTime()) {
+                    appendPre(1, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                  } else {
+                    appendPre(3, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                  }
                 }
-                appendPre(whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+              } else {
+                tomorrowEventFound = true;
+
+                if (!whenStart) {
+                  appendPre(2, whenDay + ' ' + event.summary)
+                } else {
+                  var whenEnd = moment(event.end.dateTime).format('hh:mma');
+                  if (!whenEnd) {
+                    whenEnd = event.end.date;
+                  }
+                  appendPre(2, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                }
               }
             }
 
-          } else {
-            appendPre('No upcoming events found.');
+            if ( !todayEventFound ) {
+              appendPre(1, "No events found for today.");
+            }
+
+            if ( !tomorrowEventFound ) {
+              appendPre(2, "No events found for tomorrow.");
+            }
+
           }
 
         });
@@ -119,14 +156,28 @@
       /**
        * Append a pre element to the body containing the given message as its text node.
        */
-      function appendPre(message) {
-        var pre = document.getElementById('output');
-        var textContent = document.createTextNode(message + '\n');
-        pre.appendChild(textContent);
+      function appendPre(index, message) {
+
+        if (index === 1) {
+          var pre = document.getElementById('output1');
+          var textContent = document.createTextNode(message + '\n');
+          pre.appendChild(textContent);
+        } else if (index === 2) {
+          var pre = document.getElementById('output2');
+          var textContent = document.createTextNode(message + '\n');
+          pre.appendChild(textContent);
+        } else if (index === 3) {
+          var pre = document.getElementById('output3');
+          var textContent = document.createTextNode(message + '\n');
+          pre.appendChild(textContent);
+        }
+
       }
 
       function clearPre() {
-        document.getElementById('output').innerHTML = "";
+        document.getElementById('output1').innerHTML = "";
+        document.getElementById('output2').innerHTML = "";
+        document.getElementById('output3').innerHTML = "";
       }
 
     </script>
@@ -155,7 +206,12 @@
               </button>
             </div>
             <div class="calendar-item">
-              <pre class="calendar-item grey" id="output"></pre>
+              Today's Events:
+              <pre class="calendar-item grey" id="output3" style="margin: 0;"></pre>
+              <pre class="calendar-item" id="output1"></pre>
+              <br>
+              <span class="light-grey">Tomorrow's Events:</span>
+              <pre class="calendar-item light-grey" id="output2"></pre>
             </div>
           </div>
         </div>
@@ -221,7 +277,18 @@
     <!-- Skycons init -->
     <script src="js/skycons.js"></script>
     <script>
-      var icons = new Skycons({"color": "white"}),
+      var icons = new Skycons({
+                     "monochrome": false,
+                     "colors" : {
+                       "main" : "#FFFFFF",
+                       "moon" : "#FFFFFF",
+                       "fog" : "#C0C0C0",
+                       "cloud" : "#F0F0F0",
+                       "snow" : "#FFFFFF",
+                       "leaf" : "#32CD32",
+                       "rain" : "#6495ED",
+                       "sun" : "#FFD700"
+                     }}),
           list  = [
             "clear-day", "clear-night", "partly-cloudy-day",
             "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
