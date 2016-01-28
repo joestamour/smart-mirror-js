@@ -50,7 +50,7 @@
             }
 
             for (var i = 0; i < service.forcast.data.hourly.data.length; i++) {
-                service.forcast.data.hourly.data[i].hour = moment.unix(service.forcast.data.hourly.data[i].time).format('hA');
+                service.forcast.data.hourly.data[i].hour = moment.unix(service.forcast.data.hourly.data[i].time).format('ha');
                 service.forcast.data.hourly.data[i].temperature = Math.round(service.forcast.data.hourly.data[i].temperature);
             };
             return service.forcast.data.hourly;

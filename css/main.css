@@ -143,7 +143,7 @@ canvas {
 .calendar-item {
     font-family: 'Tahoma', sans-serif;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 13px;
     margin: 0;
     margin-right: auto;
 }
@@ -151,7 +151,7 @@ canvas {
 .calendar-item-tomorrow {
     font-family: 'Tahoma', sans-serif;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     margin-right: auto;
 }
@@ -187,7 +187,7 @@ canvas {
 
 .weather-hour .tempreture {
     display: inline-block;
-    width: 50px;
+    width: 55px;
 }
 
 .weather-week {
