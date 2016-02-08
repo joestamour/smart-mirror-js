@@ -141,11 +141,11 @@
             }
 
             if ( !todayEventFound ) {
-              appendPre(1, "No events found for today.");
+              appendPre(1, "No events found for today!");
             }
 
             if ( !tomorrowEventFound ) {
-              appendPre(2, "No events found for tomorrow.");
+              appendPre(2, "No events found for tomorrow!");
             }
 
           }
@@ -194,7 +194,7 @@
         <div class="top-left">
 
           <!-- Time -->
-          <div class="date">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
+          <div class="date light-grey">{{date | date : 'EEEE, MMMM d yyyy'}}</div>
           <div class="time">{{date | date : 'hh:mm a'}}</div>
 
           <!-- Calendar -->
@@ -206,12 +206,12 @@
               </button>
             </div>
             <div class="calendar-item">
-              <span class="pink" style="font-size: 110%;">Today's Events:
+              <span>Today's Events:</span>
               <pre class="calendar-item grey" id="output3" style="margin: 0; text-decoration: line-through;"></pre>
-              <pre class="calendar-item pink" id="output1"></pre>
+              <pre class="calendar-item" id="output1"></pre>
               <br>
-              <span class="light-grey" style="font-size: 90%;">Tomorrow's Events:</span>
-              <pre class="calendar-item-tomorrow light-grey" id="output2"></pre>
+              <span class="light-grey">Tomorrow's Events:</span>
+              <pre class="calendar-item light-grey" id="output2"></pre>
             </div>
           </div>
         </div>
@@ -237,26 +237,21 @@
               </span>
             </div>
             <div class="weather-week-descriptor light-grey">{{hourlyForcast.summary}}</div>
-              <div class="weather-hour">
-                <span class="tempreture light-grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
-                  {{forcast.hour}}
-                </span>
-              </div>
-              <div class="weather-hour">
-                <span class="tempreture" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
-                  {{forcast.temperature}}&deg;
-                </span>
-              </div>
-            <div class="weather-week light-grey"
-                <span class="tempreture tempreture-min">Low</span>
-                <span class="tempreture tempreture-max">High</span>
+            <div class="weather-hour">
+              <span class="hour grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                {{forcast.hour}}
+              </span>
             </div>
+            <div class="weather-hour">
+              <span class="tempreture" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
+                {{forcast.temperature}}&deg;
+              </span>
+            </div>
+            <br>
             <div class="weather-week" ng-repeat="forcast in weeklyForcast.data" ng-if="$index < 7">
-              <div class="weather-week-day">
-                <span class="day light-grey">{{forcast.day}}</span>
-                <span class="tempreture tempreture-min">{{forcast.temperatureMin}}&deg;</span>
-                <span class="tempreture tempreture-max">{{forcast.temperatureMax}}&deg;</span>
-              </div>
+              <span class="day grey">{{forcast.day}}</span>
+              <span class="tempreture tempreture-min">{{forcast.temperatureMin}}&deg;</span>
+              <span class="tempreture tempreture-max">{{forcast.temperatureMax}}&deg;</span>
             </div>
           </div>
         </div>

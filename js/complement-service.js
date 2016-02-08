@@ -18,7 +18,8 @@
             'Wow, you are hot!',
             'You look gorgeous!',
             'Hey, sexy!',
-            'You look perfect!'
+            'You look perfect!',
+            'Lookin\' good!'
         ]
     }
 
