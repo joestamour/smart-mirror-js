@@ -37,11 +37,11 @@
             // update calendar every one minute
             $interval(updateCalendar, 1 * 60 * 1000);
 
-            // update weather every five minutes
-            $interval(updateWeather, 5 * 60 * 1000);
+            // update weather every 2 minutes
+            $interval(updateWeather, 2 * 60 * 1000);
 
             // update complement every 30 minutes
-            $interval(updateComplement, 30 * 60 * 1000);
+            $interval(updateComplement, 15 * 60 * 1000);
 
             updateTime();
             updateComplement();
