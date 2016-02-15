@@ -5,7 +5,7 @@
         'morning': [
             'Good morning, my love!',
             'Enjoy your day!',
-            'How was your sleep?',
+            'How did you sleep?',
             'Have a great day!'
         ],
         'afternoon': [
