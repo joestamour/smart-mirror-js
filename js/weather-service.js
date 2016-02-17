@@ -41,14 +41,13 @@
                 return null;
             }
 
-            // Add human readable info to info
-
             // remove first hourly data if it's not even
             var currentHour = moment.unix(service.forcast.data.hourly.data[0].time).format('h');
             if ( currentHour%2 != 0) {
                 service.forcast.data.hourly.data.splice(0,1);
             }
 
+            // Add human readable info to info
             for (var i = 0; i < service.forcast.data.hourly.data.length; i++) {
                 service.forcast.data.hourly.data[i].hour = moment.unix(service.forcast.data.hourly.data[i].time).format('ha');
                 service.forcast.data.hourly.data[i].temperature = Math.round(service.forcast.data.hourly.data[i].temperature);

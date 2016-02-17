@@ -34,13 +34,13 @@
             // update time every second
             $interval(updateTime, 1000);
 
-            // update calendar every one minute
-            $interval(updateCalendar, 1 * 60 * 1000);
+            // update calendar every 5 minutes
+            $interval(updateCalendar, 5 * 60 * 1000);
 
             // update weather every 2 minutes
             $interval(updateWeather, 2 * 60 * 1000);
 
-            // update complement every 30 minutes
+            // update complement every 15 minutes
             $interval(updateComplement, 15  * 60 * 1000);
 
             updateTime();
@@ -54,12 +54,6 @@
                 console.log($scope.hourlyForcast);
                 console.log($scope.weeklyForcast);
             });
-
-            var defaultView = function() {
-                console.debug("Ok, going to default view...");
-                $scope.focus = "default";
-            }
-
         };
 
         _this.init();

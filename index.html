@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="SmartMirror">
   <head>
+    <meta http-equiv="refresh" content="3600; URL=http://localhost:8000/index.html">
     <title>Smart Mirror</title>
 
     <!-- Libraries -->
@@ -71,7 +72,6 @@
        * Print the summary and start datetime/date of the next 48h events
        */
       function listUpcomingEvents() {
-
         var date = new Date();
         date.setHours(0);
         date.setMinutes(0);
@@ -88,15 +88,13 @@
 
         request.execute(function(resp) {
           var events = resp.items;
-          clearPre();
+          clearAllPre();
 
           if (events.length > 0) {
 
             var todayEventFound = false;
+            var futureTodayEventsFound = false;
             var tomorrowEventFound = false;
-
-            // appendPre(1, "Today's events:");
-            // appendPre(2, "Tomorrow's events:");
 
             for (i = 0; i < events.length; i++) {
               var event = events[i];
@@ -112,7 +110,7 @@
                 todayEventFound = true;
 
                 if (!whenStart) {
-                  appendPre(1, whenDay + ' ' + event.summary)
+                  appendPre('todayEvents', whenDay + ' ' + event.summary)
                 } else {
                   var whenEnd = moment(event.end.dateTime).format('hh:mma');
                   if (!whenEnd) {
@@ -120,32 +118,43 @@
                   }
 
                   if ( (new Date(event.end.dateTime)).getTime() > (new Date()).getTime()) {
-                    appendPre(1, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                    appendPre('todayEvents', whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
                   } else {
-                    appendPre(3, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                    appendPre('finishedEvents', whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
                   }
                 }
               } else {
                 tomorrowEventFound = true;
 
                 if (!whenStart) {
-                  appendPre(2, whenDay + ' ' + event.summary)
+                  appendPre('tomorrowEvents', whenDay + ' ' + event.summary)
                 } else {
                   var whenEnd = moment(event.end.dateTime).format('hh:mma');
                   if (!whenEnd) {
                     whenEnd = event.end.date;
                   }
-                  appendPre(2, whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
+                  appendPre('tomorrowEvents', whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
                 }
               }
             }
 
             if ( !todayEventFound ) {
-              appendPre(1, "No events found for today!");
+              clearPre('finishedEvents');
+              clearPre('todayEvents');
+              appendPre('todayHeader', "No events found for today!");
+            } else if (!futureTodayEventsFound) {
+              clearPre('finishedEvents');
+              clearPre('todayEvents');
+              appendPre('todayHeader', "You're finished for today!");
+            } else {
+              appendPre('todayHeader', "Your events for today:");
             }
 
             if ( !tomorrowEventFound ) {
-              appendPre(2, "No events found for tomorrow!");
+              clearPre('tomorrowEvents')
+              appendPre('tomorrowHeader', "No events found for tomorrow!");
+            } else {
+              appendPre('tomorrowHeader', "Here's what you have tomorrow:");
             }
 
           }
@@ -157,27 +166,21 @@
        * Append a pre element to the body containing the given message as its text node.
        */
       function appendPre(index, message) {
-
-        if (index === 1) {
-          var pre = document.getElementById('output1');
+          var pre = document.getElementById(index);
           var textContent = document.createTextNode(message + '\n');
           pre.appendChild(textContent);
-        } else if (index === 2) {
-          var pre = document.getElementById('output2');
-          var textContent = document.createTextNode(message + '\n');
-          pre.appendChild(textContent);
-        } else if (index === 3) {
-          var pre = document.getElementById('output3');
-          var textContent = document.createTextNode(message + '\n');
-          pre.appendChild(textContent);
-        }
-
       }
 
-      function clearPre() {
-        document.getElementById('output1').innerHTML = "";
-        document.getElementById('output2').innerHTML = "";
-        document.getElementById('output3').innerHTML = "";
+      function clearPre(index) {
+          document.getElementById(index).innerHTML = "";
+      }
+
+      function clearAllPre() {
+        document.getElementById('todayEvents').innerHTML = "";
+        document.getElementById('finishedEvents').innerHTML = "";
+        document.getElementById('tomorrowEvents').innerHTML = "";
+        document.getElementById('todayHeader').innerHTML = "";
+        document.getElementById('tomorrowHeader').innerHTML = "";
       }
 
     </script>
@@ -206,12 +209,13 @@
               </button>
             </div>
             <div class="calendar-item">
-              <span>Today's Events:</span>
-              <pre class="calendar-item grey" id="output3" style="margin: 0; text-decoration: line-through;"></pre>
-              <pre class="calendar-item" id="output1"></pre>
               <br>
-              <span class="light-grey">Tomorrow's Events:</span>
-              <pre class="calendar-item light-grey" id="output2"></pre>
+              <pre id="todayHeader" class="calendar-item" style="font-weight: bold; font-size: 16px;"></pre>
+              <pre id="finishedEvents" class="calendar-item grey" style="margin: 0; text-decoration: line-through;"></pre>
+              <pre id="todayEvents" class="calendar-item"></pre>
+              <br>
+              <pre id="tomorrowHeader" class="calendar-item light-grey" style="font-weight: bold; font-size: 16px;"></pre>
+              <pre id="tomorrowEvents" class="calendar-item light-grey" ></pre>
             </div>
           </div>
         </div>
