@@ -118,6 +118,7 @@
                   }
 
                   if ( (new Date(event.end.dateTime)).getTime() > (new Date()).getTime()) {
+                    futureTodayEventsFound = true;
                     appendPre('todayEvents', whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
                   } else {
                     appendPre('finishedEvents', whenDay + '\t' + whenStart + ' - ' + whenEnd + '  ' + event.summary)
@@ -240,7 +241,7 @@
                 {{currentForcast.temperature}}&deg;
               </span>
             </div>
-            <div class="weather-week-descriptor light-grey">{{hourlyForcast.summary}}</div>
+            <div class="weather-week-descriptor light-grey">{{currentForcast.minutely.summary}}</div>
             <div class="weather-hour">
               <span class="hour grey" ng-repeat="forcast in hourlyForcast.data" ng-if="$index < 12 && $index%2 == 0">
                 {{forcast.hour}}
