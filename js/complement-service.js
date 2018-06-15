@@ -6,13 +6,16 @@
             'Good morning, my love!',
             'Enjoy your day!',
             'How did you sleep?',
-            'Have a great day!'
+            'Have a great day!',
+            'You look great!',
+            'Stunning!'
         ],
         'afternoon': [
             'Hello, beautiful!',
             'You are sexy!',
             'Looking good today!',
-            'You look wonderful!'
+            'You look wonderful!',
+            'Stunning!'
         ],
         'evening': [
             'Wow, you are hot!',
@@ -43,10 +46,10 @@
             if (hour > 3 && hour < 12) {
                 // Morning complements
                 _list = complements['morning'].slice();
-            } else if (hour >= 12 && hour < 17) {
+            } else if (hour >= 12 && hour < 18) {
                 // Afternoon complements
                 _list = complements['afternoon'].slice();
-            } else if (hour >= 17 || hour <= 3) {
+            } else if (hour >= 18 || hour <= 3) {
                 // Evening complements
                 _list = complements['evening'].slice();
             } else {

@@ -6,7 +6,7 @@
         service.forcast = null;
 
         service.init = function() {
-            return $http.jsonp('https://api.forecast.io/forecast/'+FORCAST_API_KEY+'/41.8369,-87.6847?callback=JSON_CALLBACK').
+            return $http.jsonp('https://api.forecast.io/forecast/'+FORCAST_API_KEY+'/36.149638,-86.865997?callback=JSON_CALLBACK').
                 then(function(response) {
                     return service.forcast = response;
                 });
